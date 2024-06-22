@@ -13,7 +13,7 @@ app.use(bodyParser.text());
 app.get('/ping', (req, res) => {
   return res.json({ message: 'pong' });
 });
-//API Router
+//API Router start with /api this is the entry point
 app.use('/api', apiRouter);
 //Server
 app.listen(PORT, () => {
