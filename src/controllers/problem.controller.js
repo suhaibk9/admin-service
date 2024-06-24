@@ -1,46 +1,82 @@
 const { StatusCodes } = require('http-status-codes');
-//Ping Check - GET /api/v1/problems/ping
+const NotImplemented = require('../errors/NotImplemented.error');
+const { ProblemRepository } = require('../repositories/index');
+const { ProblemService } = require('../services/index');
+const NotFound = require('../errors/NotFound.error');
+
+// Create a new instance of ProblemService - Dependency Injection
+const problemService = new ProblemService(new ProblemRepository());
+
+// Ping Check - GET /api/v1/problems/ping
 function pingProblemController(req, res) {
   return res.json({ message: 'Problem Controller Alive' });
 }
-//Get a problem by id - GET /api/v1/problems/:id
-function addProblem(req, res) {
+
+// Create a problem - POST /api/v1/problems
+async function createProblem(req, res, next) {
+  try {
+    const newProblem = await problemService.createProblem(req.body);
+    console.log('In Controller Body', req.body);
+    console.log('newProblem', newProblem);
+    return res.status(StatusCodes.CREATED).json({
+      success: true,
+      message: 'Problem Created',
+      data: newProblem,
+      error: {},
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Get a problem by id - GET /api/v1/problems/:id
+async function getProblem(req, res, next) {
+  try {
+    const { id } = req.params;
+    const problem = await problemService.getProblem(id);
+    console.log('Problem by ID', problem);
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Problem Found',
+      data: problem,
+      error: {},
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Get all problems - GET /api/v1/problems
+async function getProblems(req, res, next) {
+  try {
+    const response = await problemService.getAllProblems();
+    console.log('RESPONSE', response);
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'All Problems',
+      data: response,
+      error: {},
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Delete a problem by id - DELETE /api/v1/problems/:id
+function deleteProblem(req, res, next) {
   return res
     .status(StatusCodes.NOT_IMPLEMENTED)
     .json({ message: 'Not Implemented' });
 }
-//Create a problem - POST /api/v1/problems
-function createProblem(req, res) {
+
+// Update a problem by id - PUT /api/v1/problems/:id
+function updateProblem(req, res, next) {
   return res
     .status(StatusCodes.NOT_IMPLEMENTED)
     .json({ message: 'Not Implemented' });
 }
-//Get a problem by id - GET /api/v1/problems/:id
-function getProblem(req, res) {
-  return res
-    .status(StatusCodes.NOT_IMPLEMENTED)
-    .json({ message: 'Not Implemented' });
-}
-//Get all problems - GET /api/v1/problems
-function getProblems(req, res) {
-  return res
-    .status(StatusCodes.NOT_IMPLEMENTED)
-    .json({ message: 'Not Implemented' });
-}
-//Delete a problem by id - DELETE /api/v1/problems/:id
-function deleteProblem(req, res) {
-  return res
-    .status(StatusCodes.NOT_IMPLEMENTED)
-    .json({ message: 'Not Implemented' });
-}
-//Update a problem by id - PUT /api/v1/problems/:id
-function updateProblem(req, res) {
-  return res
-    .status(StatusCodes.NOT_IMPLEMENTED)
-    .json({ message: 'Not Implemented' });
-}
+
 module.exports = {
-  addProblem,
   createProblem,
   getProblem,
   getProblems,
