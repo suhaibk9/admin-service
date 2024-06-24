@@ -16,8 +16,6 @@ function pingProblemController(req, res) {
 async function createProblem(req, res, next) {
   try {
     const newProblem = await problemService.createProblem(req.body);
-    console.log('In Controller Body', req.body);
-    console.log('newProblem', newProblem);
     return res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'Problem Created',
@@ -63,10 +61,20 @@ async function getProblems(req, res, next) {
 }
 
 // Delete a problem by id - DELETE /api/v1/problems/:id
-function deleteProblem(req, res, next) {
-  return res
-    .status(StatusCodes.NOT_IMPLEMENTED)
-    .json({ message: 'Not Implemented' });
+async function deleteProblem(req, res, next) {
+  try {
+    const id = req.params.id;
+    const resp = await problemService.deleteProblem(id);
+    console.log('Problem Deleted', resp);
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Problem Deleted',
+      data: resp,
+      error: {},
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
 // Update a problem by id - PUT /api/v1/problems/:id
