@@ -30,14 +30,6 @@ allowedTransports.push(
     level: 'error',
     db: LOG_DB_URL,
     collection: 'logs',
-    // format: winston.format.combine(
-    //   winston.format.timestamp({
-    //     format: 'YYYY-MM-DD HH:mm:ss',
-    //   }),
-    //   winston.format.printf((log) => {
-    //     return `${log.timestamp} [${log.level.toUpperCase()}]: ${log.message}`;
-    //   })
-    // ),
   })
 );
 //Putting in File
