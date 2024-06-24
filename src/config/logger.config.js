@@ -35,7 +35,7 @@ allowedTransports.push(
 //Putting in File
 allowedTransports.push(
   new winston.transports.File({
-    filename: `app.log`,
+    filename: `${__dirname}/../logs/app.log`,
   })
 );
 const logger = winston.createLogger({
